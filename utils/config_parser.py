@@ -12,32 +12,48 @@ from configparser import ConfigParser
 
 class CommonConfig:
     CONFIG_PARSER = ConfigParser()
-    common_config = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'config', 'common_config.ini'))
+    common_config = os.path.join('common_config.ini')
+    if not os.path.exists(common_config):
+        common_config = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'config', 'common_config.ini'))
     CONFIG_PARSER.read([common_config])
 
     @staticmethod
     def get_data_folder():
-        folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
-                                              CommonConfig.CONFIG_PARSER.get('common', 'data_folder')))
+        common_config = os.path.join('common_config.ini')
+        if not os.path.exists(common_config):
+            folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
+                                                  CommonConfig.CONFIG_PARSER.get('common', 'data_folder')))
+        else:
+            folder = os.path.abspath(CommonConfig.CONFIG_PARSER.get('common', 'data_folder'))
         os.makedirs(folder, exist_ok=True)
         return folder
 
     @staticmethod
     def get_data_preparation_logs_folder():
-        folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
-                                              CommonConfig.CONFIG_PARSER.get('common', 'data_preparation_logs_folder')))
+        common_config = os.path.join('common_config.ini')
+        if not os.path.exists(common_config):
+            folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
+                                                  CommonConfig.CONFIG_PARSER.get('common', 'data_preparation_logs_folder')))
+        else:
+            folder = CommonConfig.CONFIG_PARSER.get('common', 'data_preparation_logs_folder')
+            datafolder = os.path.abspath(CommonConfig.CONFIG_PARSER.get('common', 'data_folder'))
+            folder = os.path.join(datafolder,folder)
         os.makedirs(folder, exist_ok=True)
         return folder
 
     @staticmethod
     def get_property_lists_folder():
         folder = CommonConfig.CONFIG_PARSER.get('dataset_preparer', 'property_lists_folder')
+        datafolder = os.path.abspath(CommonConfig.CONFIG_PARSER.get('common', 'data_folder'))
+        folder = os.path.join(datafolder,folder)
         os.makedirs(folder, exist_ok=True)
         return folder
 
     @staticmethod
     def get_property_lists_integer_folder():
         folder = CommonConfig.CONFIG_PARSER.get('dataset_preparer', 'property_lists_integer_folder')
+        datafolder = os.path.abspath(CommonConfig.CONFIG_PARSER.get('common', 'data_folder'))
+        folder = os.path.join(datafolder,folder)
         os.makedirs(folder, exist_ok=True)
         return folder
 
@@ -52,6 +68,8 @@ class CommonConfig:
     @staticmethod
     def get_combo_generation_result_folder():
         folder = CommonConfig.CONFIG_PARSER.get('combo_generation', 'result_folder')
+        datafolder = os.path.abspath(CommonConfig.CONFIG_PARSER.get('common', 'data_folder'))
+        folder = os.path.join(datafolder,folder)
         os.makedirs(folder, exist_ok=True)
         return folder
 

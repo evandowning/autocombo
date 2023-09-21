@@ -55,6 +55,7 @@ class IntegerConverter:
     def get_integer(self, properties):
         ret = 0
         for b in properties:
-            ret |= 1 << self.property_index_mapping[str(b)]
+            if str(b) in self.property_index_mapping:
+                ret |= 1 << self.property_index_mapping[str(b)]
         return ret
 
